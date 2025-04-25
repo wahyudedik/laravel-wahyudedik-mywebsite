@@ -71,7 +71,7 @@
                                 <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn">Log in</a>
-                                
+
                             @endauth
                         </div>
                     @endif
@@ -117,7 +117,7 @@
             </div>
         </header>
 
-        <!-- Page header --> 
+        <!-- Page header -->
         <div class="page-header d-print-none mt-3">
             <div class="container-xl">
                 <div class="row g-2 align-items-center">
@@ -146,312 +146,253 @@
         <!-- Page body -->
         <div class="page-body">
             <div class="container-xl">
-                <div class="row">
-                    <!-- Left column - Personal Info -->
-                    <div class="col-lg-4">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="text-center mb-4">
-                                    <span class="avatar avatar-xl mb-3"
-                                        style="background-image: url(https://via.placeholder.com/200x200)"></span>
-                                    <h2 class="mb-1">Wahyu Dedik</h2>
-                                    <div class="text-muted">Full Stack Developer</div>
-                                </div>
+                @if ($resume)
+                    <div class="row">
+                        <!-- Left column - Personal Info -->
+                        <div class="col-lg-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="text-center mb-4">
+                                        @if ($resume->photo_path)
+                                            <span class="avatar avatar-xl mb-3"
+                                                style="background-image: url({{ Storage::url($resume->photo_path) }})"></span>
+                                        @else
+                                            <span class="avatar avatar-xl mb-3"
+                                                style="background-image: url(https://via.placeholder.com/200x200)"></span>
+                                        @endif
+                                        <h2 class="mb-1">{{ $resume->full_name }}</h2>
+                                        <div class="text-muted">{{ $resume->title }}</div>
+                                    </div>
 
-                                <div class="mb-3">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="ti ti-mail me-2 text-muted"></i>
-                                        <div>
-                                            <a href="mailto:contact@wahyudedik.com">contact@wahyudedik.com</a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="ti ti-phone me-2 text-muted"></i>
-                                        <div>
-                                            <a href="tel:+6281234567890">+62 812 3456 7890</a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="ti ti-map-pin me-2 text-muted"></i>
-                                        <div>
-                                            Jakarta, Indonesia
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="ti ti-world me-2 text-muted"></i>
-                                        <div>
-                                            <a href="https://wahyudedik.com" target="_blank">wahyudedik.com</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr class="my-3">
-
-                                <!-- Social Links -->
-                                <div class="mb-3">
-                                    <h3 class="card-title mb-3">Social Profiles</h3>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="ti ti-brand-github me-2 text-muted"></i>
-                                        <div>
-                                            <a href="https://github.com/wahyudedik"
-                                                target="_blank">github.com/wahyudedik</a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="ti ti-brand-linkedin me-2 text-muted"></i>
-                                        <div>
-                                            <a href="#" target="_blank">linkedin.com/in/wahyudedik</a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="ti ti-brand-twitter me-2 text-muted"></i>
-                                        <div>
-                                            <a href="#" target="_blank">twitter.com/wahyudedik</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr class="my-3">
-
-                                <!-- Skills -->
-                                <div>
-                                    <h3 class="card-title mb-3">Skills</h3>
-                                    <div class="d-flex flex-wrap">
-                                        <span class="badge bg-blue-lt skill-badge">PHP</span>
-                                        <span class="badge bg-blue-lt skill-badge">Laravel</span>
-                                        <span class="badge bg-blue-lt skill-badge">JavaScript</span>
-                                        <span class="badge bg-blue-lt skill-badge">Vue.js</span>
-                                        <span class="badge bg-blue-lt skill-badge">React</span>
-                                        <span class="badge bg-blue-lt skill-badge">MySQL</span>
-                                        <span class="badge bg-blue-lt skill-badge">PostgreSQL</span>
-                                        <span class="badge bg-blue-lt skill-badge">HTML/CSS</span>
-                                        <span class="badge bg-blue-lt skill-badge">Tailwind CSS</span>
-                                        <span class="badge bg-blue-lt skill-badge">Bootstrap</span>
-                                        <span class="badge bg-blue-lt skill-badge">Git</span>
-                                        <span class="badge bg-blue-lt skill-badge">Docker</span>
-                                        <span class="badge bg-blue-lt skill-badge">AWS</span>
-                                        <span class="badge bg-blue-lt skill-badge">RESTful APIs</span>
-                                    </div>
-                                </div>
-
-                                <hr class="my-3">
-
-                                <!-- Languages -->
-                                <div>
-                                    <h3 class="card-title mb-3">Languages</h3>
-                                    <div class="mb-2">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <div class="me-auto">Indonesian</div>
-                                            <div>Native</div>
-                                        </div>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-primary" style="width: 100%"
-                                                role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                                aria-valuemax="100" aria-label="100% Complete">
-                                                <span class="visually-hidden">100% Complete</span>
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="ti ti-mail me-2 text-muted"></i>
+                                            <div>
+                                                <a href="mailto:{{ $resume->email }}">{{ $resume->email }}</a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="d-flex align-items-center mb-1">
-                                            <div class="me-auto">English</div>
-                                            <div>Fluent</div>
-                                        </div>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-primary" style="width: 85%"
-                                                role="progressbar" aria-valuenow="85" aria-valuemin="0"
-                                                aria-valuemax="100" aria-label="85% Complete">
-                                                <span class="visually-hidden">85% Complete</span>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="ti ti-phone me-2 text-muted"></i>
+                                            <div>
+                                                <a href="tel:{{ $resume->phone }}">{{ $resume->phone }}</a>
                                             </div>
                                         </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="ti ti-map-pin me-2 text-muted"></i>
+                                            <div>
+                                                {{ $resume->location }}
+                                            </div>
+                                        </div>
+                                        @if ($resume->website)
+                                            <div class="d-flex align-items-center">
+                                                <i class="ti ti-world me-2 text-muted"></i>
+                                                <div>
+                                                    <a href="{{ $resume->website }}"
+                                                        target="_blank">{{ $resume->website }}</a>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
+
+                                    <hr class="my-3">
+
+                                    <!-- Social Links -->
+                                    @if (is_array($resume->social_links) && count(array_filter($resume->social_links)) > 0)
+                                        <div class="mb-3">
+                                            <h3 class="card-title mb-3">Social Profiles</h3>
+                                            @if (isset($resume->social_links['github']) && $resume->social_links['github'])
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="ti ti-brand-github me-2 text-muted"></i>
+                                                    <div>
+                                                        <a href="{{ $resume->social_links['github'] }}"
+                                                            target="_blank">{{ $resume->social_links['github'] }}</a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if (isset($resume->social_links['linkedin']) && $resume->social_links['linkedin'])
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="ti ti-brand-linkedin me-2 text-muted"></i>
+                                                    <div>
+                                                        <a href="{{ $resume->social_links['linkedin'] }}"
+                                                            target="_blank">{{ $resume->social_links['linkedin'] }}</a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if (isset($resume->social_links['twitter']) && $resume->social_links['twitter'])
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ti ti-brand-twitter me-2 text-muted"></i>
+                                                    <div>
+                                                        <a href="{{ $resume->social_links['twitter'] }}"
+                                                            target="_blank">{{ $resume->social_links['twitter'] }}</a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <hr class="my-3">
+                                    @endif
+
+                                    <!-- Skills -->
+                                    @if (is_array($resume->skills) && count($resume->skills) > 0)
+                                        <div>
+                                            <h3 class="card-title mb-3">Skills</h3>
+                                            <div class="d-flex flex-wrap">
+                                                @foreach ($resume->skills as $skill)
+                                                    <span
+                                                        class="badge bg-blue-lt skill-badge">{{ $skill }}</span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <hr class="my-3">
+                                    @endif
+
+                                    <!-- Languages -->
+                                    @if (is_array($resume->languages) && count($resume->languages) > 0)
+                                        <div>
+                                            <h3 class="card-title mb-3">Languages</h3>
+                                            @foreach ($resume->languages as $language)
+                                                <div class="mb-2">
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        <div class="me-auto">{{ $language['name'] ?? 'Language' }}
+                                                        </div>
+                                                        <div>{{ $language['level'] ?? 'Proficient' }}</div>
+                                                    </div>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-primary"
+                                                            style="width: {{ $language['percentage'] ?? 100 }}%"
+                                                            role="progressbar"
+                                                            aria-valuenow="{{ $language['percentage'] ?? 100 }}"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="{{ $language['percentage'] ?? 100 }}% Complete">
+                                                            <span
+                                                                class="visually-hidden">{{ $language['percentage'] ?? 100 }}%
+                                                                Complete</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Right column - Experience, Education, etc. -->
+                        <div class="col-lg-8">
+                            <!-- About Me -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">About Me</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ $resume->about_me }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Work Experience -->
+                            @if ($resume->workExperiences->count() > 0)
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Work Experience</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach ($resume->workExperiences as $experience)
+                                            <div class="timeline-event">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="me-auto">
+                                                        <h4 class="m-0">{{ $experience->position }}</h4>
+                                                        <div class="text-muted">{{ $experience->company }}</div>
+                                                    </div>
+                                                    <div class="text-muted">{{ $experience->start_date }} -
+                                                        {{ $experience->current_job ? 'Present' : $experience->end_date }}
+                                                    </div>
+                                                </div>
+                                                <p>{{ $experience->description }}</p>
+                                                @if (is_array($experience->responsibilities) && count($experience->responsibilities) > 0)
+                                                    <ul>
+                                                        @foreach ($experience->responsibilities as $responsibility)
+                                                            <li>{{ $responsibility }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            <!-- Education -->
+                            @if ($resume->education->count() > 0)
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Education</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach ($resume->education as $education)
+                                            <div class="timeline-event">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="me-auto">
+                                                        <h4 class="m-0">{{ $education->degree }}</h4>
+                                                        <div class="text-muted">{{ $education->institution }}</div>
+                                                    </div>
+                                                    <div class="text-muted">{{ $education->start_date }} -
+                                                        {{ $education->end_date ?? 'Present' }}</div>
+                                                </div>
+                                                @if ($education->description)
+                                                    <p>{{ $education->description }}</p>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Projects -->
+                            @if ($resume->projects->count() > 0)
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Notable Projects</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        @foreach ($resume->projects as $project)
+                                            <div class="timeline-event">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="me-auto">
+                                                        <h4 class="m-0">{{ $project->name }}</h4>
+                                                    </div>
+                                                    @if ($project->url)
+                                                        <div>
+                                                            <a href="{{ $project->url }}"
+                                                                class="btn btn-sm btn-outline-primary"
+                                                                target="_blank">View Project</a>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <p>{{ $project->description }}</p>
+                                                @if (is_array($project->technologies) && count($project->technologies) > 0)
+                                                    <div class="d-flex flex-wrap">
+                                                        @foreach ($project->technologies as $tech)
+                                                            <span
+                                                                class="badge bg-blue-lt skill-badge">{{ $tech }}</span>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
-
-                    <!-- Right column - Experience, Education, etc. -->
-                    <div class="col-lg-8">
-                        <!-- About Me -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h3 class="card-title">About Me</h3>
-                            </div>
-                            <div class="card-body">
-                                <p>Experienced Full Stack Developer with a passion for creating efficient, scalable, and
-                                    user-friendly web applications. Specialized in Laravel, JavaScript frameworks, and
-                                    modern frontend technologies. Committed to delivering high-quality code and
-                                    exceptional user experiences.</p>
-                                <p>With over 7 years of experience in the industry, I've worked on a wide range of
-                                    projects from e-commerce platforms to complex enterprise applications. I enjoy
-                                    solving challenging problems and continuously learning new technologies to stay at
-                                    the forefront of web development.</p>
-                            </div>
+                @else
+                    <div class="empty">
+                        <div class="empty-img">
+                            <i class="ti ti-file-cv" style="font-size: 4rem;"></i>
                         </div>
-
-                        <!-- Work Experience -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h3 class="card-title">Work Experience</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Senior Full Stack Developer</h4>
-                                            <div class="text-muted">TechInnovate Solutions</div>
-                                        </div>
-                                        <div class="text-muted">2020 - Present</div>
-                                    </div>
-                                    <p>Lead developer for multiple enterprise-level web applications using Laravel,
-                                        Vue.js, and MySQL. Responsible for architecture design, code review, and
-                                        mentoring junior developers.</p>
-                                    <ul>
-                                        <li>Developed a scalable e-commerce platform that increased client sales by 35%
-                                        </li>
-                                        <li>Implemented CI/CD pipelines that reduced deployment time by 70%</li>
-                                        <li>Optimized database queries resulting in 40% faster page load times</li>
-                                        <li>Led a team of 5 developers to successfully deliver projects on time and
-                                            within budget</li>
-                                    </ul>
-                                </div>
-
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Web Developer</h4>
-                                            <div class="text-muted">Digital Creations Agency</div>
-                                        </div>
-                                        <div class="text-muted">2017 - 2020</div>
-                                    </div>
-                                    <p>Developed responsive websites and web applications for various clients using PHP,
-                                        Laravel, JavaScript, and MySQL.</p>
-                                    <ul>
-                                        <li>Built custom CMS solutions for content management</li>
-                                        <li>Integrated third-party APIs for payment processing and social media</li>
-                                        <li>Implemented responsive designs ensuring cross-browser compatibility</li>
-                                        <li>Collaborated with designers to create intuitive user interfaces</li>
-                                    </ul>
-                                </div>
-
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Junior Developer</h4>
-                                            <div class="text-muted">WebSolutions Inc.</div>
-                                        </div>
-                                        <div class="text-muted">2015 - 2017</div>
-                                    </div>
-                                    <p>Started as a junior developer working on frontend development and gradually moved
-                                        to full stack development.</p>
-                                    <ul>
-                                        <li>Developed and maintained client websites</li>
-                                        <li>Created responsive layouts using HTML, CSS, and JavaScript</li>
-                                        <li>Assisted senior developers with backend functionality</li>
-                                        <li>Participated in code reviews and team meetings</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Education -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h3 class="card-title">Education</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Bachelor of Computer Science</h4>
-                                            <div class="text-muted">University of Indonesia</div>
-                                        </div>
-                                        <div class="text-muted">2011 - 2015</div>
-                                    </div>
-                                    <p>Graduated with honors. Specialized in Software Engineering with a focus on web
-                                        technologies and database systems.</p>
-                                </div>
-
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Web Development Certification</h4>
-                                            <div class="text-muted">Tech Academy</div>
-                                        </div>
-                                        <div class="text-muted">2014</div>
-                                    </div>
-                                    <p>Intensive 6-month program covering modern web development technologies and best
-                                        practices.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Projects -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Notable Projects</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">E-commerce Platform</h4>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View Project</a>
-                                        </div>
-                                    </div>
-                                    <p>A full-featured e-commerce platform with inventory management, payment
-                                        processing, and customer management.</p>
-                                    <div class="d-flex flex-wrap">
-                                        <span class="badge bg-blue-lt skill-badge">Laravel</span>
-                                        <span class="badge bg-blue-lt skill-badge">Vue.js</span>
-                                        <span class="badge bg-blue-lt skill-badge">MySQL</span>
-                                        <span class="badge bg-blue-lt skill-badge">Stripe API</span>
-                                    </div>
-                                </div>
-
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Project Management Tool</h4>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View Project</a>
-                                        </div>
-                                    </div>
-                                    <p>A collaborative project management application with real-time updates, task
-                                        tracking, and reporting features.</p>
-                                    <div class="d-flex flex-wrap">
-                                        <span class="badge bg-blue-lt skill-badge">Laravel</span>
-                                        <span class="badge bg-blue-lt skill-badge">React</span>
-                                        <span class="badge bg-blue-lt skill-badge">PostgreSQL</span>
-                                        <span class="badge bg-blue-lt skill-badge">WebSockets</span>
-                                    </div>
-                                </div>
-
-                                <div class="timeline-event">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="me-auto">
-                                            <h4 class="m-0">Content Management System</h4>
-                                        </div>
-                                        <div>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">View Project</a>
-                                        </div>
-                                    </div>
-                                    <p>A custom CMS built for a media company to manage articles, multimedia content,
-                                        and user subscriptions.</p>
-                                    <div class="d-flex flex-wrap">
-                                        <span class="badge bg-blue-lt skill-badge">Laravel</span>
-                                        <span class="badge bg-blue-lt skill-badge">Alpine.js</span>
-                                        <span class="badge bg-blue-lt skill-badge">MySQL</span>
-                                        <span class="badge bg-blue-lt skill-badge">AWS S3</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="empty-title">No resume available</p>
+                        <p class="empty-subtitle text-muted">
+                            There is no active resume to display at the moment.
+                        </p>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
 

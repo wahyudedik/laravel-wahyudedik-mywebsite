@@ -313,13 +313,13 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Budget Range</label>
-                            <select class="form-select" name="budget">
-                                <option value="">Select budget range</option>
-                                <option value="under-100">Under $100</option>
-                                <option value="100-500">$100 - $500</option>
-                                <option value="500-1000">$500 - $1,000</option>
-                                <option value="1000-plus">$1,000+</option>
-                            </select>
+                            <div class="input-group">
+                                <select class="form-select" name="currency" style="max-width: 100px;">
+                                    <option value="USD">USD</option>
+                                    <option value="IDR">IDR</option>
+                                </select>
+                                <input type="number" class="form-control" name="budget" placeholder="Enter budget amount" min="0">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

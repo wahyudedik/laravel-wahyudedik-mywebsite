@@ -17,13 +17,13 @@ Features:
     - Web/Desktop/Mobile Applications (User/Developer License)
     - Offline payment & WhatsApp confirmation
     - Custom orders via WhatsApp
--   Project Collaboration (via WhatsApp)
--   Online CV/Resume
--   Contact
+-   Project Collaboration (via WhatsApp) -> Done
+-   Online CV/Resume -> Done
+-   Contact -> Done
 -   Admin Dashboard
     - User management
     - Product management
-    - Project management
-    - CV management
-    - Contact management
+    - Project management -> Done
+    - CV management -> Done
+    - Contact management -> Done
     - Feedback link share

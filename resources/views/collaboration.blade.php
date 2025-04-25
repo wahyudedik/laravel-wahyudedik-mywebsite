@@ -55,7 +55,7 @@
                                 <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn">Log in</a>
-                                
+
                             @endauth
                         </div>
                     @endif
@@ -173,7 +173,8 @@
                                 <p class="text-muted">Native and cross-platform mobile applications for iOS and Android.
                                 </p>
                                 <ul class="list-unstyled mt-3 text-start">
-                                    <li class="mb-2"><i class="ti ti-check text-success me-2"></i>User-Friendly UI/UX
+                                    <li class="mb-2"><i class="ti ti-check text-success me-2"></i>User-Friendly
+                                        UI/UX
                                     </li>
                                     <li class="mb-2"><i class="ti ti-check text-success me-2"></i>Cross-Platform
                                         Solutions</li>
@@ -278,7 +279,7 @@
                     <div class="col-md-8 mx-auto">
                         <div class="card">
                             <div class="card-body">
-                                <form>
+                                <form id="whatsappForm" onsubmit="submitToWhatsApp(event)">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label required">Full Name</label>
@@ -319,13 +320,15 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Budget Range</label>
-                                            <select class="form-select" name="budget">
-                                                <option value="">Select budget range</option>
-                                                <option value="under-500">Under $500</option>
-                                                <option value="500-1000">$500 - $1,000</option>
-                                                <option value="1000-5000">$1,000 - $5,000</option>
-                                                <option value="5000-plus">$5,000+</option>
-                                            </select>
+                                            <div class="input-group">
+                                                <select class="form-select" name="currency"
+                                                    style="max-width: 100px;">
+                                                    <option value="USD">USD</option>
+                                                    <option value="IDR">IDR</option>
+                                                </select>
+                                                <input type="number" class="form-control" name="budget"
+                                                    placeholder="Enter budget amount" min="0">
+                                            </div>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Timeline</label>
@@ -395,6 +398,60 @@
 
     <!-- Tabler Core -->
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+
+    <script>
+        function submitToWhatsApp(event) {
+            event.preventDefault();
+
+            // Get form data
+            const form = document.getElementById('whatsappForm');
+            const formData = new FormData(form);
+
+            // Prepare message text
+            let message = "Hello, I'd like to start a project with you!\n\n";
+
+            // Add all form fields to message
+            for (const [key, value] of formData.entries()) {
+                if (value) {
+                    // Get the field label
+                    const labelElement = form.querySelector(`label[for="${key}"]`) ||
+                        form.querySelector(
+                            `label:has(input[name="${key}"], select[name="${key}"], textarea[name="${key}"])`);
+
+                    let fieldName = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+                    if (labelElement) {
+                        fieldName = labelElement.textContent.replace('*', '').trim();
+                    }
+
+                    // Handle select elements to get the selected text instead of value
+                    if (form.elements[key].tagName === 'SELECT' && form.elements[key].selectedIndex > 0) {
+                        const selectedOption = form.elements[key].options[form.elements[key].selectedIndex];
+                        message += `${fieldName}: ${selectedOption.text}\n`;
+                    }
+                    // Handle textareas with special formatting
+                    else if (form.elements[key].tagName === 'TEXTAREA') {
+                        message += `${fieldName}:\n${value}\n\n`;
+                    }
+                    // Handle all other inputs
+                    else {
+                        message += `${fieldName}: ${value}\n`;
+                    }
+                }
+            }
+
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+
+            // Your WhatsApp number
+            const whatsappNumber = "6281654932383";
+
+            // Create WhatsApp URL
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+            // Redirect to WhatsApp
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
 </body>
 
 </html>

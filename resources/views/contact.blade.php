@@ -40,10 +40,10 @@
                     @if (Route::has('login'))
                         <div class="nav-item">
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
+                                <a href="{{ url('/admin/dashboard') }}" class="btn btn-primary">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn">Log in</a>
-                                
+
                             @endauth
                         </div>
                     @endif
@@ -120,8 +120,8 @@
                                     </div>
                                     <div>
                                         <div class="text-muted mb-1">Email</div>
-                                        <a href="mailto:contact@wahyudedik.com"
-                                            class="h3">contact@wahyudedik.com</a>
+                                        <a href="mailto:wdedyk@gmail.com"
+                                            class="h3">wdedyk@gmail.com</a>
                                     </div>
                                 </div>
 
@@ -131,7 +131,7 @@
                                     </div>
                                     <div>
                                         <div class="text-muted mb-1">WhatsApp</div>
-                                        <a href="https://wa.me/6281234567890" class="h3">+62 812 3456 7890</a>
+                                        <a href="https://wa.me/6281654932383" class="h3">+62 816 5493 2383</a>
                                     </div>
                                 </div>
 
@@ -141,7 +141,7 @@
                                     </div>
                                     <div>
                                         <div class="text-muted mb-1">Location</div>
-                                        <div class="h3">Jakarta, Indonesia</div>
+                                        <div class="h3">Mojokerto, Indonesia</div>
                                     </div>
                                 </div>
 
@@ -149,16 +149,13 @@
 
                                 <h4 class="mb-3">Social Media</h4>
                                 <div class="d-flex gap-3">
-                                    <a href="#" class="btn btn-icon btn-outline-primary" target="_blank">
+                                    <a href="https://www.linkedin.com/in/wahyu-dedik-dwi-astono-147484169" class="btn btn-icon btn-outline-primary" target="_blank">
                                         <i class="ti ti-brand-linkedin"></i>
                                     </a>
-                                    <a href="#" class="btn btn-icon btn-outline-primary" target="_blank">
+                                    <a href="https://github.com/wahyudedik" class="btn btn-icon btn-outline-primary" target="_blank">
                                         <i class="ti ti-brand-github"></i>
                                     </a>
-                                    <a href="#" class="btn btn-icon btn-outline-primary" target="_blank">
-                                        <i class="ti ti-brand-twitter"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-icon btn-outline-primary" target="_blank">
+                                    <a href="https://www.instagram.com/wahyudedik6" class="btn btn-icon btn-outline-primary" target="_blank">
                                         <i class="ti ti-brand-instagram"></i>
                                     </a>
                                 </div>
@@ -206,35 +203,83 @@
                                 <h3 class="card-title">Send a Message</h3>
                             </div>
                             <div class="card-body">
+                                @if (session('success'))
+                                    <div class="alert alert-success mb-4" role="alert">
+                                        <div class="d-flex">
+                                            <div>
+                                                <i class="ti ti-check me-2"></i>
+                                            </div>
+                                            <div>
+                                                {{ session('success') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (session('error'))
+                                    <div class="alert alert-danger mb-4" role="alert">
+                                        <div class="d-flex">
+                                            <div>
+                                                <i class="ti ti-alert-circle me-2"></i>
+                                            </div>
+                                            <div>
+                                                {{ session('error') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <form action="{{ route('contact.submit') }}" method="POST">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger mb-4" role="alert">
+                                            <div class="d-flex">
+                                                <div>
+                                                    <i class="ti ti-alert-circle me-2"></i>
+                                                </div>
+                                                <div>
+                                                    <ul class="list-disc pl-5">
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label required">Full Name</label>
                                             <input type="text" class="form-control" name="name"
-                                                placeholder="Your name" required>
+                                                placeholder="Your name" required value="{{ old('name') }}">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label required">Email Address</label>
                                             <input type="email" class="form-control" name="email"
-                                                placeholder="Your email" required>
+                                                placeholder="Your email" required value="{{ old('email') }}">
                                         </div>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label required">Subject</label>
                                         <input type="text" class="form-control" name="subject"
-                                            placeholder="Message subject" required>
+                                            placeholder="Message subject" required value="{{ old('subject') }}">
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label required">Message</label>
-                                        <textarea class="form-control" name="message" rows="6" placeholder="Your message..." required></textarea>
+                                        <textarea class="form-control" name="message" rows="6" placeholder="Your message..." required>{{ old('message') }}</textarea>
+                                    </div>
+
+                                    <!-- Honeypot field to catch bots -->
+                                    <div class="d-none">
+                                        <input type="text" name="website" autocomplete="off">
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="newsletter">
+                                            <input class="form-check-input" type="checkbox" name="newsletter"
+                                                {{ old('newsletter') ? 'checked' : '' }}>
                                             <span class="form-check-label">Subscribe to newsletter</span>
                                         </label>
                                     </div>
