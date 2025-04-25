@@ -23,8 +23,7 @@ Features:
 -   Admin Dashboard
     - User management
     - Product management
-    - Order management
-    - Portfolio management
-    - Resume management
-    - Setting management
+    - Project management
+    - CV management
     - Contact management
+    - Feedback link share
