@@ -48,7 +48,7 @@
                 </button>
                 <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
                     <a href="{{ url('/') }}">
-                        Wahyu Dedik 
+                        Wahyu Dedik
                     </a>
                 </h1>
                 <div class="navbar-nav flex-row order-md-last">
@@ -208,80 +208,125 @@
                 </div>
 
                 <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning"><i class="ti ti-star-filled"></i></span>
-                                </div>
-                                <p class="card-text">"The e-book templates were exactly what I needed for my business.
-                                    Professional design and easy to customize."</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <div class="d-flex align-items-center">
-                                    <span class="avatar avatar-sm rounded bg-blue-lt me-3">JD</span>
-                                    <div>
-                                        <div class="font-weight-medium">John Doe</div>
-                                        <div class="text-muted">Marketing Specialist</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @php
+                        $publishedFeedbacks = \App\Models\Feedback::where('is_published', true)
+                            ->where('content', '!=', '')
+                            ->latest()
+                            ->take(3)
+                            ->get();
+                    @endphp
 
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning"><i class="ti ti-star-filled"></i></span>
+                    @forelse($publishedFeedbacks as $feedback)
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="text-warning me-1">
+                                                <i
+                                                    class="ti ti-star{{ $i <= $feedback->rating ? '-filled' : '' }}"></i>
+                                            </span>
+                                        @endfor
+                                    </div>
+                                    <p class="card-text">"{{ $feedback->content }}"</p>
                                 </div>
-                                <p class="card-text">"Working on a collaboration project was seamless. Great
-                                    communication and delivered beyond expectations."</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <div class="d-flex align-items-center">
-                                    <span class="avatar avatar-sm rounded bg-red-lt me-3">JS</span>
-                                    <div>
-                                        <div class="font-weight-medium">Jane Smith</div>
-                                        <div class="text-muted">Startup Founder</div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $initials = \App\Models\Feedback::getInitials($feedback->name);
+                                            $colors = ['blue', 'red', 'green', 'purple', 'orange', 'teal'];
+                                            $colorIndex = crc32($feedback->name) % count($colors);
+                                            $color = $colors[$colorIndex];
+                                        @endphp
+                                        <span
+                                            class="avatar avatar-sm rounded bg-{{ $color }}-lt me-3">{{ $initials }}</span>
+                                        <div>
+                                            <div class="font-weight-medium">{{ $feedback->name }}</div>
+                                            <div class="text-muted">{{ $feedback->position }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @empty
+                        <!-- Fallback testimonials if no published feedback -->
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning"><i class="ti ti-star-filled"></i></span>
+                                    </div>
+                                    <p class="card-text">"The e-book templates were exactly what I needed for my
+                                        business.
+                                        Professional design and easy to customize."</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <div class="d-flex align-items-center">
+                                        <span class="avatar avatar-sm rounded bg-blue-lt me-3">JD</span>
+                                        <div>
+                                            <div class="font-weight-medium">John Doe</div>
+                                            <div class="text-muted">Marketing Specialist</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="d-flex mb-3">
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                    <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning"><i class="ti ti-star-filled"></i></span>
+                                    </div>
+                                    <p class="card-text">"Working on a collaboration project was seamless. Great
+                                        communication and delivered beyond expectations."</p>
                                 </div>
-                                <p class="card-text">"The application I purchased works flawlessly. Customer support
-                                    was responsive and helpful with my questions."</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-0">
-                                <div class="d-flex align-items-center">
-                                    <span class="avatar avatar-sm rounded bg-green-lt me-3">RJ</span>
-                                    <div>
-                                        <div class="font-weight-medium">Robert Johnson</div>
-                                        <div class="text-muted">Software Developer</div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <div class="d-flex align-items-center">
+                                        <span class="avatar avatar-sm rounded bg-red-lt me-3">JS</span>
+                                        <div>
+                                            <div class="font-weight-medium">Jane Smith</div>
+                                            <div class="text-muted">Startup Founder</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex mb-3">
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                        <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
+                                    </div>
+                                    <p class="card-text">"The application I purchased works flawlessly. Customer
+                                        support
+                                        was responsive and helpful with my questions."</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <div class="d-flex align-items-center">
+                                        <span class="avatar avatar-sm rounded bg-green-lt me-3">RJ</span>
+                                        <div>
+                                            <div class="font-weight-medium">Robert Johnson</div>
+                                            <div class="text-muted">Software Developer</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>

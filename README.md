@@ -11,19 +11,19 @@ Installation:
 Features:
 
 -   Landing page
--   Digital Product Store
-    - E-books
-    - Templates (Source/Figma)
-    - Web/Desktop/Mobile Applications (User/Developer License)
-    - Offline payment & WhatsApp confirmation
-    - Custom orders via WhatsApp
+-   Digital Product Store -> Done
+    - E-books -> Done
+    - Templates (Source/Figma) -> Done
+    - Web/Desktop/Mobile Applications (User/Developer License) -> Done
+    - Offline payment & WhatsApp confirmation -> Done
+    - Custom orders via WhatsApp -> Done
 -   Project Collaboration (via WhatsApp) -> Done
 -   Online CV/Resume -> Done
 -   Contact -> Done
 -   Admin Dashboard
     - User management
-    - Product management
+    - Product management -> Done
     - Project management -> Done
     - CV management -> Done
     - Contact management -> Done
-    - Feedback link share
+    - Feedback link share -> Done

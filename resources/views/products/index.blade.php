@@ -131,153 +131,100 @@
                 <!-- Categories -->
                 <div class="mb-4">
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="#" class="btn btn-outline-primary active">All</a>
-                        <a href="#" class="btn btn-outline-primary">E-books</a>
-                        <a href="#" class="btn btn-outline-primary">Templates</a>
-                        <a href="#" class="btn btn-outline-primary">Applications</a>
+                        <a href="{{ route('products.index') }}"
+                            class="btn btn-outline-primary {{ !request('category') ? 'active' : '' }}">All</a>
+                        <a href="{{ route('products.index', ['category' => 'e-book']) }}"
+                            class="btn btn-outline-primary {{ request('category') == 'e-book' ? 'active' : '' }}">E-books</a>
+                        <a href="{{ route('products.index', ['category' => 'template']) }}"
+                            class="btn btn-outline-primary {{ request('category') == 'template' ? 'active' : '' }}">Templates</a>
+                        <a href="{{ route('products.index', ['category' => 'application']) }}"
+                            class="btn btn-outline-primary {{ request('category') == 'application' ? 'active' : '' }}">Applications</a>
                     </div>
                 </div>
 
                 <!-- Products -->
                 <div class="row row-cards">
-                    <!-- Product 1 -->
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card card-sm product-card">
-                            <div class="ribbon ribbon-top ribbon-bookmark bg-green">
-                                <i class="ti ti-star"></i>
-                            </div>
-                            <a href="#" class="d-block">
-                                <img src="https://via.placeholder.com/400x300?text=E-book" class="card-img-top"
-                                    alt="E-book">
-                            </a>
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <span class="badge bg-blue me-2">E-book</span>
-                                    <div>
-                                        <div class="text-truncate">
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-muted">(48)</span>
+                    @forelse ($products as $product)
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card card-sm product-card">
+                                @if ($product->featured)
+                                    <div class="ribbon ribbon-top ribbon-bookmark bg-green">
+                                        <i class="ti ti-star"></i>
+                                    </div>
+                                @endif
+                                <a href="{{ route('products.show', $product->slug) }}" class="d-block">
+                                    <img src="{{ Storage::url($product->image) }}" class="card-img-top"
+                                        alt="{{ $product->name }}">
+                                </a>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <span
+                                            class="badge 
+                            @if ($product->category == 'e-book') bg-blue 
+                            @elseif($product->category == 'template') bg-purple 
+                            @elseif($product->category == 'application') bg-green @endif me-2">
+                                            {{ ucfirst($product->category) }}
+                                        </span>
+                                        <div>
+                                            <div class="text-truncate">
+                                                @for ($i = 0; $i < 5; $i++)
+                                                    @if ($i < $product->rating)
+                                                        <span class="text-warning me-1"><i
+                                                                class="ti ti-star-filled"></i></span>
+                                                    @else
+                                                        <span class="text-muted me-1"><i
+                                                                class="ti ti-star"></i></span>
+                                                    @endif
+                                                @endfor
+                                                <span class="text-muted">({{ $product->reviews_count }})</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <h3 class="card-title mt-3">
-                                    <a href="#">Web Development Guide 2023</a>
-                                </h3>
-                                <div class="text-muted">Comprehensive guide to modern web development techniques</div>
-                                <div class="mt-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="h3 m-0">$29.99</div>
-                                        <a href="#" class="btn btn-primary">
-                                            <i class="ti ti-shopping-cart me-2"></i>Buy Now
-                                        </a>
+                                    <h3 class="card-title mt-3">
+                                        <a
+                                            href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a>
+                                    </h3>
+                                    <div class="text-muted">{{ Str::limit($product->description, 100) }}</div>
+                                    <div class="mt-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="h3 m-0">${{ number_format($product->price_user, 2) }}</div>
+                                            <a href="{{ route('products.show', $product->slug) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-shopping-cart me-2"></i>Buy Now
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Product 2 -->
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card card-sm product-card">
-                            <a href="#" class="d-block">
-                                <img src="https://via.placeholder.com/400x300?text=Template" class="card-img-top"
-                                    alt="Template">
-                            </a>
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <span class="badge bg-purple me-2">Template</span>
-                                    <div>
-                                        <div class="text-truncate">
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-muted"><i class="ti ti-star"></i></span>
-                                            <span class="text-muted">(32)</span>
-                                        </div>
-                                    </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="empty">
+                                <div class="empty-img">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-shopping-cart-off" width="40"
+                                        height="40" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                                        <path d="M17 17a2 2 0 1 0 2 2"></path>
+                                        <path d="M17 17h-11v-11"></path>
+                                        <path d="M9.239 5.231l10.761 .769l-1 7h-2m-4 0h-7"></path>
+                                        <path d="M3 3l18 18"></path>
+                                    </svg>
                                 </div>
-                                <h3 class="card-title mt-3">
-                                    <a href="#">Modern Dashboard UI Kit</a>
-                                </h3>
-                                <div class="text-muted">Figma template for creating beautiful admin dashboards</div>
-                                <div class="mt-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="h3 m-0">$49.99</div>
-                                        <a href="#" class="btn btn-primary">
-                                            <i class="ti ti-shopping-cart me-2"></i>Buy Now
-                                        </a>
-                                    </div>
-                                </div>
+                                <p class="empty-title">No products found</p>
+                                <p class="empty-subtitle text-muted">
+                                    We're working on adding new products. Please check back later.
+                                </p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Product 3 -->
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card card-sm product-card">
-                            <a href="#" class="d-block">
-                                <img src="https://via.placeholder.com/400x300?text=Application" class="card-img-top"
-                                    alt="Application">
-                            </a>
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <span class="badge bg-green me-2">Application</span>
-                                    <div>
-                                        <div class="text-truncate">
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-warning me-1"><i class="ti ti-star-filled"></i></span>
-                                            <span class="text-muted">(56)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h3 class="card-title mt-3">
-                                    <a href="#">Inventory Management System</a>
-                                </h3>
-                                <div class="text-muted">Complete solution for tracking and managing inventory</div>
-                                <div class="mt-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="h3 m-0">$199.99</div>
-                                        <a href="#" class="btn btn-primary">
-                                            <i class="ti ti-shopping-cart me-2"></i>Buy Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- More products can be added here -->
+                    @endforelse
                 </div>
 
                 <!-- Pagination -->
                 <div class="d-flex mt-4">
-                    <ul class="pagination ms-auto">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <i class="ti ti-chevron-left"></i>
-                                prev
-                            </a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                next
-                                <i class="ti ti-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+                    {{ $products->links('pagination.tabler') }}
                 </div>
             </div>
         </div>
@@ -304,8 +251,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">WhatsApp Number</label>
-                            <input type="text" class="form-control" name="whatsapp"
-                                placeholder="Enter your WhatsApp number">
+                            <input type="tel" class="form-control" name="whatsapp"
+                                placeholder="Enter your WhatsApp number 625897458354">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Project Details</label>
@@ -318,7 +265,8 @@
                                     <option value="USD">USD</option>
                                     <option value="IDR">IDR</option>
                                 </select>
-                                <input type="number" class="form-control" name="budget" placeholder="Enter budget amount" min="0">
+                                <input type="number" class="form-control" name="budget"
+                                    placeholder="Enter budget amount" min="0">
                             </div>
                         </div>
                     </div>
@@ -358,7 +306,7 @@
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
-                                Copyright &copy; {{ date('Y') }}
+                                Copyright © {{ date('Y') }}
                                 <a href="." class="link-secondary">Wahyu Dedik</a>.
                                 All rights reserved.
                             </li>
@@ -371,6 +319,48 @@
 
     <!-- Tabler Core -->
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const whatsappButton = document.querySelector('#modal-custom-order .btn-success');
+
+            whatsappButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Get form values
+                const name = document.querySelector('#modal-custom-order input[name="name"]').value;
+                const email = document.querySelector('#modal-custom-order input[name="email"]').value;
+                const whatsapp = document.querySelector('#modal-custom-order input[name="whatsapp"]').value;
+                const details = document.querySelector('#modal-custom-order textarea[name="details"]')
+                .value;
+                const currency = document.querySelector('#modal-custom-order select[name="currency"]')
+                .value;
+                const budget = document.querySelector('#modal-custom-order input[name="budget"]').value;
+
+                // Validate required fields
+                if (!name || !whatsapp || !details) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                // Construct message
+                const message = `*New Custom Order Request*\n\n` +
+                    `*Name:* ${name}\n` +
+                    `*Email:* ${email}\n` +
+                    `*WhatsApp:* ${whatsapp}\n\n` +
+                    `*Project Details:*\n${details}\n\n` +
+                    `*Budget:* ${currency} ${budget}`;
+
+                // Replace with your WhatsApp number
+                const whatsappNumber = '6281654932383'; // Change this to your actual WhatsApp number
+
+                // Create WhatsApp URL
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+    </script>
 </body>
 
 </html>
