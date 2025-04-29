@@ -52,7 +52,7 @@
                     @if (Route::has('login'))
                         <div class="nav-item">
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
+                                <a href="{{ url('/admin/dashboard') }}" class="btn btn-primary">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn">Log in</a>
 
