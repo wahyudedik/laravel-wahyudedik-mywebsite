@@ -1,194 +1,228 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
-                </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" x-data="{ open: false }">
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" height="30">
+        </a>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                        {{ __('Products') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
-                        {{ __('Orders') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">
-                        {{ __('Contacts') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.newsletter.index')" :active="request()->routeIs('admin.newsletter.*')">
-                        {{ __('Newsletter') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.resume.index')" :active="request()->routeIs('admin.resume.*')">
-                        {{ __('Resume') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.feedback.index')" :active="request()->routeIs('admin.feedback.*')">
-                        {{ __('Feedback') }}
-                    </x-nav-link>
-                </div>
-            </div>
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"
+            @click="open = !open">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="flex items-center">
+        <!-- Navigation Content -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Left Side Navigation -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.products.index') }}">{{ __('Products') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.orders.index') }}">{{ __('Orders') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.contacts.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.contacts.index') }}">{{ __('Contacts') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.newsletter.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.newsletter.index') }}">{{ __('Newsletter') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.resume.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.resume.index') }}">{{ __('Resume') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.feedback.*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('admin.feedback.index') }}">{{ __('Feedback') }}</a>
+                </li>
+            </ul>
+
+            <!-- Right Side Navigation -->
+            <div class="d-flex align-items-center">
                 <!-- Notifications Dropdown -->
-                <div class="hidden sm:flex sm:items-center sm:ms-2">
-                    <x-dropdown align="right" width="80">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <i class="ti ti-bell"></i>
-                                @php
-                                    $unreadCount = auth()->user()->unreadNotifications->count();
-                                @endphp
-                                @if($unreadCount > 0)
-                                    <span class="ml-1 text-xs bg-red-500 text-white rounded-full px-2 py-0.5">{{ $unreadCount }}</span>
-                                @endif
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- Notification Header -->
-                            <div class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600">
-                                Notifications
-                            </div>
-                            
-                            <!-- Notification List -->
-                            @forelse(auth()->user()->notifications->take(5) as $notification)
-                                <div class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-800 transition duration-150 ease-in-out {{ $notification->read_at ? 'opacity-75' : 'font-bold' }}">
-                                    @if(isset($notification->data['subject']))
-                                        <a href="{{ route('admin.contacts.show', $notification->data['contact_id']) }}" class="block">
-                                            <div>New message from {{ $notification->data['name'] }}</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ \Illuminate\Support\Str::limit($notification->data['subject'], 30) }}</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</div>
-                                        </a>
-                                    @else
-                                        <div>{{ $notification->data['message'] ?? 'Notification' }}</div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</div>
-                                    @endif
-                                </div>
-                            @empty
-                                <div class="block px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300">
-                                    No notifications
-                                </div>
-                            @endforelse
-                            
-                            <!-- Mark All as Read Button -->
-                            @if(auth()->user()->notifications->count() > 0)
-                                <div class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-200 dark:border-gray-600">
-                                    <form action="{{ route('admin.notifications.mark-all-read') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                                            Mark all as read
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        </x-slot>
-                    </x-dropdown>
-                </div>
-
-                <!-- Settings Dropdown -->
-                <div class="hidden sm:flex sm:items-center sm:ms-2">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
-
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
-
-                <!-- Hamburger Menu (Mobile) -->
-                <div class="-me-2 flex items-center sm:hidden">
-                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                <div class="dropdown me-3">
+                    <button class="btn btn-light position-relative" type="button" id="notificationsDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="ti ti-bell"></i>
+                        @php
+                            $unreadCount = auth()->user()->unreadNotifications->count();
+                        @endphp
+                        @if ($unreadCount > 0)
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ $unreadCount }}
+                                <span class="visually-hidden">unread notifications</span>
+                            </span>
+                        @endif
                     </button>
+                    <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notificationsDropdown"
+                        style="width: 320px; max-height: 400px; overflow-y: auto;">
+                        <div class="dropdown-header d-flex justify-content-between align-items-center">
+                            <span>Notifications</span>
+                            @if ($unreadCount > 0)
+                                <span class="badge bg-danger rounded-pill">{{ $unreadCount }}</span>
+                            @endif
+                        </div>
+                        <div class="dropdown-divider"></div>
+
+                        @forelse(auth()->user()->notifications->take(5) as $notification)
+                            <a class="dropdown-item {{ $notification->read_at ? '' : 'fw-bold' }} py-2"
+                                href="{{ isset($notification->data['contact_id'])
+                                    ? route('admin.contacts.show', $notification->data['contact_id'])
+                                    : (isset($notification->data['url'])
+                                        ? $notification->data['url']
+                                        : '#') }}">
+                                @if (isset($notification->data['subject']))
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-2">
+                                            <i class="ti ti-mail text-primary fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div>New message from {{ $notification->data['name'] }}</div>
+                                            <div class="small text-muted">
+                                                {{ \Illuminate\Support\Str::limit($notification->data['subject'], 30) }}
+                                            </div>
+                                            <div class="small text-muted">
+                                                {{ $notification->created_at->diffForHumans() }}</div>
+                                        </div>
+                                    </div>
+                                @elseif(isset($notification->data['order_id']))
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-2">
+                                            <i class="ti ti-shopping-cart text-success fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div>New order #{{ $notification->data['order_number'] }}</div>
+                                            <div class="small text-muted">
+                                                {{ $notification->data['message'] ?? 'New order received' }}</div>
+                                            <div class="small text-muted">
+                                                {{ $notification->created_at->diffForHumans() }}</div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-2">
+                                            <i class="ti ti-bell text-info fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <div>{{ $notification->data['message'] ?? 'Notification' }}</div>
+                                            <div class="small text-muted">
+                                                {{ $notification->created_at->diffForHumans() }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </a>
+                        @empty
+                            <div class="dropdown-item text-center py-3">
+                                <i class="ti ti-bell-off text-muted mb-2 fs-3"></i>
+                                <p class="mb-0">No notifications</p>
+                            </div>
+                        @endforelse
+
+                        @if (auth()->user()->notifications->count() > 0)
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item d-flex justify-content-between">
+                                <form action="{{ route('admin.notifications.mark-all-read') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        <i class="ti ti-check me-1"></i>Mark all as read
+                                    </button>
+                                </form>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">
+                                    <i class="ti ti-list me-1"></i>View all
+                                </a>
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Responsive Navigation Menu (Mobile) -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                {{ __('Products') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
-                {{ __('Orders') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">
-                {{ __('Contacts') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.newsletter.index')" :active="request()->routeIs('admin.newsletter.*')">
-                {{ __('Newsletter') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.resume.index')" :active="request()->routeIs('admin.resume.*')">
-                {{ __('Resume') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.feedback.index')" :active="request()->routeIs('admin.feedback.*')">
-                {{ __('Feedback') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+                <!-- User Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button"
+                        id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="d-none d-md-block me-2">{{ Auth::user()->name }}</div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                        <li>
+                            <div class="dropdown-header">
+                                <div class="fw-bold">{{ Auth::user()->name }}</div>
+                                <div class="small text-muted">{{ Auth::user()->email }}</div>
+                            </div>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                                <i class="ti ti-user me-2"></i>{{ __('Profile') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ url('/') }}">
+                                <i class="ti ti-home me-2"></i>{{ __('Home Page') }}
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                @csrf
+                                <button type="submit" class="dropdown-item d-flex align-items-center text-danger">
+                                    <i class="ti ti-logout me-2"></i>{{ __('Log Out') }}
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </nav>
+
+<!-- Mobile Navigation Menu (Visible on small screens) -->
+<div class="d-block d-lg-none bg-light border-bottom py-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        @if (request()->routeIs('admin.dashboard'))
+                            <h5 class="mb-0">Dashboard</h5>
+                        @elseif(request()->routeIs('admin.products.*'))
+                            <h5 class="mb-0">Products</h5>
+                        @elseif(request()->routeIs('admin.orders.*'))
+                            <h5 class="mb-0">Orders</h5>
+                        @elseif(request()->routeIs('admin.contacts.*'))
+                            <h5 class="mb-0">Contacts</h5>
+                        @elseif(request()->routeIs('admin.newsletter.*'))
+                            <h5 class="mb-0">Newsletter</h5>
+                        @elseif(request()->routeIs('admin.resume.*'))
+                            <h5 class="mb-0">Resume</h5>
+                        @elseif(request()->routeIs('admin.feedback.*'))
+                            <h5 class="mb-0">Feedback</h5>
+                        @elseif(request()->routeIs('profile.edit'))
+                            <h5 class="mb-0">Profile</h5>
+                        @else
+                            <h5 class="mb-0">{{ config('app.name') }}</h5>
+                        @endif
+                    </div>
+                    <div>
+                        <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="ti ti-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

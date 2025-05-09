@@ -1,82 +1,104 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Contact Messages') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if (session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-                            role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
+@section('header')
+    <h2 class="fs-2 m-0">
+        {{ __('Contact Messages') }}
+    </h2>
+@endsection
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white dark:bg-gray-700">
-                            <thead>
-                                <tr>
-                                    <th class="py-3 px-6 text-left">Name</th>
-                                    <th class="py-3 px-6 text-left">Email</th>
-                                    <th class="py-3 px-6 text-left">Subject</th>
-                                    <th class="py-3 px-6 text-left">Date</th>
-                                    <th class="py-3 px-6 text-left">Status</th>
-                                    <th class="py-3 px-6 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($contacts as $contact)
-                                    <tr
-                                        class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                        <td class="py-4 px-6">{{ $contact->name }}</td>
-                                        <td class="py-4 px-6">{{ $contact->email }}</td>
-                                        <td class="py-4 px-6">{{ $contact->subject }}</td>
-                                        <td class="py-4 px-6">{{ $contact->created_at->format('M d, Y') }}</td>
-                                        <td class="py-4 px-6">
-                                            @if ($contact->is_read)
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Read
-                                                </span>
-                                            @else
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                    Unread
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="py-4 px-6">
-                                            <a href="{{ route('admin.contacts.show', $contact->id) }}"
-                                                class="text-blue-600 hover:text-blue-900 mr-2">View</a>
-                                            <form class="inline-block"
-                                                action="{{ route('admin.contacts.destroy', $contact->id) }}"
-                                                method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this message?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="text-red-600 hover:text-red-900">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="py-4 px-6 text-center">No contact messages found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-4">
-                        {{ $contacts->links() }}
-                    </div>
+@section('content')
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            @endif
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th width="120">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($contacts as $contact)
+                            <tr>
+                                <td>{{ $contact->name }}</td>
+                                <td>{{ $contact->email }}</td>
+                                <td>{{ $contact->subject }}</td>
+                                <td>{{ $contact->created_at->format('M d, Y') }}</td>
+                                <td>
+                                    @if ($contact->is_read)
+                                        <span class="badge bg-success">Read</span>
+                                    @else
+                                        <span class="badge bg-danger">Unread</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('admin.contacts.show', $contact->id) }}" 
+                                            class="btn btn-outline-primary">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" 
+                                            onclick="deleteContact('{{ $contact->id }}')">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </div>
+                                    <form id="delete-form-{{ $contact->id }}" 
+                                        action="{{ route('admin.contacts.destroy', $contact->id) }}" 
+                                        method="POST" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="ti ti-mail-off fs-1 text-muted mb-3"></i>
+                                        <p class="text-muted">No contact messages found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                {{ $contacts->links() }}
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
+
+@section('scripts')
+<script>
+    function deleteContact(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this message?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+@endsection

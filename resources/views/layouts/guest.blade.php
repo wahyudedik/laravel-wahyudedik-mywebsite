@@ -9,24 +9,31 @@
 
         <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/x-icon">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Tabler Core -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+        
+        <!-- Tabler Fonts -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler-fonts.min.css">
+        
+        <!-- Tabler Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.30.0/tabler-icons.min.css">
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+    <body class="antialiased">
+        <div class="min-h-screen d-flex flex-column justify-content-center align-items-center py-4 bg-light">
             <div>
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo" width="80" height="80">
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            <div class="card w-100 mx-auto mt-4" style="max-width: 28rem;">
+                <div class="card-body">
+                    @yield('content')
+                </div>
             </div>
         </div>
+        
+        <!-- Tabler Core JS -->
+        <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
     </body>
 </html>

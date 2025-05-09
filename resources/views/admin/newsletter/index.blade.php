@@ -1,80 +1,112 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+@extends('layouts.app')
+
+@section('header')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fs-2 m-0">
             {{ __('Newsletter Subscribers') }}
         </h2>
-    </x-slot>
+        <a href="{{ route('admin.newsletter.send.form') }}" class="btn btn-primary">
+            <i class="ti ti-mail-forward me-1"></i> Send Newsletter
+        </a>
+    </div>
+@endsection
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif 
-
-                    <div class="overflow-x-auto">
-                        <div class="flex justify-end mb-4">
-                            <a href="{{ route('admin.newsletter.send.form') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Send Newsletter
-                            </a>
-                        </div>
-                        <table class="min-w-full bg-white dark:bg-gray-700">
-                            <thead>
-                                <tr>
-                                    <th class="py-3 px-6 text-left">Email</th>
-                                    <th class="py-3 px-6 text-left">Status</th>
-                                    <th class="py-3 px-6 text-left">Subscribed Date</th>
-                                    <th class="py-3 px-6 text-left">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($subscribers as $subscriber)
-                                    <tr class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                        <td class="py-4 px-6">{{ $subscriber->email }}</td>
-                                        <td class="py-4 px-6">
-                                            @if($subscriber->is_active)
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Active
-                                                </span>
-                                            @else
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                    Inactive
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td class="py-4 px-6">{{ $subscriber->created_at->format('M d, Y') }}</td>
-                                        <td class="py-4 px-6">
-                                            <form class="inline-block" action="{{ route('admin.newsletter.toggle', $subscriber->id) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-blue-600 hover:text-blue-900 mr-2">
-                                                    {{ $subscriber->is_active ? 'Deactivate' : 'Activate' }}
-                                                </button>
-                                            </form>
-                                            <form class="inline-block" action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this subscriber?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Remove</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="4" class="py-4 px-6 text-center">No subscribers found.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="mt-4">
-                        {{ $subscribers->links() }}
-                    </div>
+@section('content')
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            @endif 
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Subscribed Date</th>
+                            <th width="150">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($subscribers as $subscriber)
+                            <tr>
+                                <td>{{ $subscriber->email }}</td>
+                                <td>
+                                    @if($subscriber->is_active)
+                                        <span class="badge bg-success">Active</span>
+                                    @else
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    @endif
+                                </td>
+                                <td>{{ $subscriber->created_at->format('M d, Y') }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <form action="{{ route('admin.newsletter.toggle', $subscriber->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-outline-primary">
+                                                @if($subscriber->is_active)
+                                                    <i class="ti ti-eye-off"></i>
+                                                @else
+                                                    <i class="ti ti-eye"></i>
+                                                @endif
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-outline-danger" 
+                                            onclick="deleteSubscriber('{{ $subscriber->id }}', '{{ $subscriber->email }}')">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </div>
+                                    <form id="delete-form-{{ $subscriber->id }}" 
+                                        action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" 
+                                        method="POST" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <i class="ti ti-mail-off fs-1 text-muted mb-3"></i>
+                                        <p class="text-muted">No subscribers found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4">
+                {{ $subscribers->links() }}
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
+
+@section('scripts')
+<script>
+    function deleteSubscriber(id, email) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You want to remove ${email} from subscribers?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+@endsection

@@ -1,64 +1,89 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Send Newsletter') }}
-            </h2>
-            <a href="{{ route('admin.newsletter.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                Back to Subscribers
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
-                        </div>
-                    @endif
+@section('header')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fs-2 m-0">
+            {{ __('Send Newsletter') }}
+        </h2>
+        <a href="{{ route('admin.newsletter.index') }}" class="btn btn-outline-secondary">
+            <i class="ti ti-arrow-left me-1"></i> Back to Subscribers
+        </a>
+    </div>
+@endsection
 
-                    @if(session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    <form action="{{ route('admin.newsletter.send') }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Subject</label>
-                            <input type="text" name="subject" id="subject" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content</label>
-                            <textarea name="content" id="content" rows="10" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required></textarea>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">HTML is supported.</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="test_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Test Email (Optional)</label>
-                            <input type="email" name="test_email" id="test_email" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">If provided, the newsletter will only be sent to this email for testing.</p>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input id="confirm" name="confirm" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" required>
-                                <label for="confirm" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                                    I confirm that I want to send this newsletter
-                                </label>
-                            </div>
-                            <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Send Newsletter
-                            </button>
-                        </div>
-                    </form>
+@section('content')
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
+            @endif 
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <form action="{{ route('admin.newsletter.send') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="subject" class="form-label required">Subject</label>
+                    <input type="text" name="subject" id="subject" class="form-control @error('subject') is-invalid @enderror" required>
+                    @error('subject')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="content" class="form-label required">Content</label>
+                    <textarea name="content" id="content" rows="10" class="form-control @error('content') is-invalid @enderror" required></textarea>
+                    <div class="form-text">HTML is supported.</div>
+                    @error('content')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="test_email" class="form-label">Test Email (Optional)</label>
+                    <input type="email" name="test_email" id="test_email" class="form-control @error('test_email') is-invalid @enderror">
+                    <div class="form-text">If provided, the newsletter will only be sent to this email for testing.</div>
+                    @error('test_email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                        <input id="confirm" name="confirm" type="checkbox" class="form-check-input" required>
+                        <label for="confirm" class="form-check-label">
+                            I confirm that I want to send this newsletter
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-send me-1"></i> Send Newsletter
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</x-app-layout>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // You could add a rich text editor here if needed
+        // For example:
+        // if (typeof tinymce !== 'undefined') {
+        //     tinymce.init({
+        //         selector: '#content',
+        //         plugins: 'link lists image code table',
+        //         toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code'
+        //     });
+        // }
+    });
+</script>
+@endsection

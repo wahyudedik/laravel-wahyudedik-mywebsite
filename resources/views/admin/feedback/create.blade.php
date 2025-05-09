@@ -1,41 +1,50 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+@extends('layouts.app')
+
+@section('header')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fs-2 m-0">
             {{ __('Create Feedback Link') }}
         </h2>
-    </x-slot>
+        <a href="{{ route('admin.feedback.index') }}" class="btn btn-outline-secondary">
+            <i class="ti ti-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+@endsection
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form method="POST" action="{{ route('admin.feedback.store') }}">
-                        @csrf
-                        
-                        <div class="mb-4">
-                            <x-input-label for="name" :value="__('Client Name')" />
-                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                        </div>
-                        
-                        <div class="mb-4">
-                            <x-input-label for="position" :value="__('Position/Company')" />
-                            <x-text-input id="position" class="block mt-1 w-full" type="text" name="position" :value="old('position')" />
-                            <x-input-error :messages="$errors->get('position')" class="mt-2" />
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Example: Marketing Specialist, CEO at Company Name, etc.</p>
-                        </div>
-                        
-                        <div class="flex items-center justify-end mt-4">
-                            <a href="{{ route('admin.feedback.index') }}" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100 mr-4">
-                                Cancel
-                            </a>
-                            <x-primary-button>
-                                {{ __('Create Feedback Link') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
+@section('content')
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.feedback.store') }}">
+                @csrf
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label required">Client Name</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                        id="name" name="name" value="{{ old('name') }}" required autofocus>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-            </div>
+                
+                <div class="mb-4">
+                    <label for="position" class="form-label">Position/Company</label>
+                    <input type="text" class="form-control @error('position') is-invalid @enderror" 
+                        id="position" name="position" value="{{ old('position') }}">
+                    @error('position')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div class="form-text">Example: Marketing Specialist, CEO at Company Name, etc.</div>
+                </div>
+                
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="{{ route('admin.feedback.index') }}" class="btn btn-outline-secondary me-2">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-plus me-1"></i> Create Feedback Link
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</x-app-layout>
+@endsection
