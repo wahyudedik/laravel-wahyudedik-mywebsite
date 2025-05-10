@@ -1,141 +1,149 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Add Project for') }} {{ $resume->full_name }}
-        </h2> 
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-                    role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form method="POST" action="{{ route('admin.resume.project.store', $resume) }}">
-                        @csrf
+@section('header')
+    <h2 class="fs-2 m-0">
+        {{ __('Add Project for') }} {{ $resume->full_name }}
+    </h2>
+@endsection
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <div class="mb-4">
-                                    <x-input-label for="name" :value="__('Project Title')" />
-                                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                        :value="old('name')" required />
-                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                                </div>
+@section('content')
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-                                <div class="mb-4">
-                                    <x-input-label for="url" :value="__('Project URL (optional)')" />
-                                    <x-text-input id="url" class="block mt-1 w-full" type="url" name="url"
-                                        :value="old('url')" placeholder="https://example.com" />
-                                    <x-input-error :messages="$errors->get('url')" class="mt-2" />
-                                </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.resume.project.store', $resume) }}">
+                @csrf
 
-                                <div class="mb-4">
-                                    <x-input-label for="order" :value="__('Display Order (lower numbers appear first)')" />
-                                    <x-text-input id="order" class="block mt-1 w-full" type="number" name="order"
-                                        :value="old('order', 0)" min="0" />
-                                    <x-input-error :messages="$errors->get('order')" class="mt-2" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="mb-4">
-                                    <x-input-label for="description" :value="__('Description')" />
-                                    <textarea id="description" name="description" rows="4"
-                                        class="block mt-1 w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
-                                        required>{{ old('description') }}</textarea>
-                                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                                </div>
-
-                                <div class="mb-4">
-                                    <x-input-label for="technologies" :value="__('Technologies Used')" />
-                                    <x-text-input id="technologies_input" class="block mt-1 w-full" type="text"
-                                        name="technologies_input" placeholder="Add technologies and press Enter" />
-                                    <div id="technologies_container" class="mt-2 flex flex-wrap gap-2"></div>
-                                    <input type="hidden" id="technologies_json" name="technologies"
-                                        value="{{ old('technologies') }}">
-                                    <x-input-error :messages="$errors->get('technologies')" class="mt-2" />
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label required">Project Title</label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                id="name" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <a href="{{ route('admin.resume.project.index', $resume) }}"
-                                class="mr-3 font-medium text-blue-600 dark:text-blue-500 hover:underline">Cancel</a>
-                            <x-primary-button>
-                                {{ __('Add Project') }}
-                            </x-primary-button>
+                        <div class="mb-3">
+                            <label for="url" class="form-label">Project URL (optional)</label>
+                            <input type="url" class="form-control @error('url') is-invalid @enderror" 
+                                id="url" name="url" value="{{ old('url') }}" placeholder="https://example.com">
+                            @error('url')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-                    </form>
+
+                        <div class="mb-3">
+                            <label for="order" class="form-label">Display Order (lower numbers appear first)</label>
+                            <input type="number" class="form-control @error('order') is-invalid @enderror" 
+                                id="order" name="order" value="{{ old('order', 0) }}" min="0">
+                            @error('order')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="description" class="form-label required">Description</label>
+                            <textarea class="form-control @error('description') is-invalid @enderror" 
+                                id="description" name="description" rows="4" required>{{ old('description') }}</textarea>
+                            @error('description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="technologies_input" class="form-label">Technologies Used</label>
+                            <input type="text" class="form-control" id="technologies_input" 
+                                placeholder="Add technologies and press Enter">
+                            <div id="technologies_container" class="d-flex flex-wrap gap-1 mt-2"></div>
+                            <input type="hidden" id="technologies_json" name="technologies" 
+                                value="{{ old('technologies') }}">
+                            @error('technologies')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="{{ route('admin.resume.project.index', $resume) }}" 
+                        class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-device-floppy me-1"></i> Add Project
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+@endsection
 
-    <x-slot name="scripts">
-        <script>
-            // Technologies handling
-            const technologiesInput = document.getElementById('technologies_input');
-            const technologiesContainer = document.getElementById('technologies_container');
-            const technologiesJson = document.getElementById('technologies_json');
-            let technologies = [];
+@section('scripts')
+<script>
+    // Technologies handling
+    const technologiesInput = document.getElementById('technologies_input');
+    const technologiesContainer = document.getElementById('technologies_container');
+    const technologiesJson = document.getElementById('technologies_json');
+    let technologies = [];
 
-            // Initialize technologies from existing value if any
-            if (technologiesJson.value) {
-                try {
-                    technologies = JSON.parse(technologiesJson.value);
-                    renderTechnologies();
-                } catch (e) {
-                    console.error('Error parsing technologies JSON:', e);
-                }
+    // Initialize technologies from existing value if any
+    if (technologiesJson.value) {
+        try {
+            technologies = JSON.parse(technologiesJson.value);
+            renderTechnologies();
+        } catch (e) {
+            console.error('Error parsing technologies JSON:', e);
+        }
+    }
+
+    technologiesInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const technology = this.value.trim();
+            if (technology && !technologies.includes(technology)) {
+                technologies.push(technology);
+                renderTechnologies();
+                updateTechnologiesJson();
             }
+            this.value = '';
+        }
+    });
 
-            technologiesInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    const technology = this.value.trim();
-                    if (technology && !technologies.includes(technology)) {
-                        technologies.push(technology);
-                        renderTechnologies();
-                        updateTechnologiesJson();
-                    }
-                    this.value = '';
-                }
+    function renderTechnologies() {
+        technologiesContainer.innerHTML = '';
+        technologies.forEach((technology, index) => {
+            const badge = document.createElement('span');
+            badge.className = 'badge bg-info bg-opacity-10 text-info p-2 d-flex align-items-center';
+            badge.innerHTML = `
+                ${technology}
+                <button type="button" class="btn-close btn-close-sm ms-2" 
+                    style="font-size: 0.5rem;" data-index="${index}"></button>
+            `;
+            badge.querySelector('button').addEventListener('click', function() {
+                technologies.splice(this.dataset.index, 1);
+                renderTechnologies();
+                updateTechnologiesJson();
             });
+            technologiesContainer.appendChild(badge);
+        });
+    }
 
-            function renderTechnologies() {
-                technologiesContainer.innerHTML = '';
-                technologies.forEach((technology, index) => {
-                    const badge = document.createElement('span');
-                    badge.className =
-                        'bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 flex items-center';
-                    badge.innerHTML = `
-                        ${technology}
-                        <button type="button" class="ml-1 text-blue-800 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-400" data-index="${index}">
-                            ×
-                        </button>
-                    `;
-                    badge.querySelector('button').addEventListener('click', function() {
-                        technologies.splice(this.dataset.index, 1);
-                        renderTechnologies();
-                        updateTechnologiesJson();
-                    });
-                    technologiesContainer.appendChild(badge);
-                });
-            }
-
-            function updateTechnologiesJson() {
-                technologiesJson.value = JSON.stringify(technologies);
-            }
-        </script>
-    </x-slot>
-</x-app-layout>
+    function updateTechnologiesJson() {
+        technologiesJson.value = JSON.stringify(technologies);
+    }
+</script>
+@endsection
