@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
@@ -11,6 +12,18 @@ use App\Http\Controllers\NewsletterController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Storage link
+Route::get('/storage-link', function () {
+    Artisan::call('storage:link');
+    return 'Storage linked successfully.';
+});
+
+// Clear cache
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    return 'Cache cleared successfully.';
 });
 
 // Public feedback routes
